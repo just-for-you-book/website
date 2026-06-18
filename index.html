@@ -1,70 +1,299 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="gu" id="html">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Book Audio Companion</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Just For You · Jain Audio Collection</title>
+<meta name="description" content="Just For You — a Jain audiobook & devotional audio collection in Gujarati and English.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Gujarati:wght@500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-body {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-    font-family: system-ui, sans-serif;
-    line-height: 1.6;
-}
+  :root{
+    --paper:#F4EEE2; --paper-2:#EBE2D1; --card:#FBF7EF;
+    --ink:#14403B; --ink-soft:#3E6B63; --muted:#7D8A82;
+    --accent:#C2761A; --accent-soft:#E5A33C;
+    --line:rgba(20,64,59,.14); --line-2:rgba(20,64,59,.08);
+    --serif:"Noto Serif Gujarati",Georgia,serif;
+    --sans:"Noto Sans Gujarati",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    --bar-h:86px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:calc(var(--bar-h) + env(safe-area-inset-bottom,0px) + 16px);}
 
-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
+  header{position:relative;padding:46px 22px 30px;text-align:center;border-bottom:1px solid var(--line);
+    background:radial-gradient(120% 90% at 50% -10%, rgba(229,163,60,.18), transparent 60%),var(--paper);}
+  .langtoggle{position:absolute;top:16px;right:16px;display:flex;border:1px solid var(--line);
+    border-radius:999px;overflow:hidden;background:var(--card)}
+  .langtoggle button{border:0;background:transparent;cursor:pointer;font-family:var(--sans);
+    font-size:13px;font-weight:600;color:var(--ink-soft);padding:7px 13px}
+  .langtoggle button.on{background:var(--ink);color:#F4EEE2}
+  .mark{width:46px;height:46px;margin:0 auto 14px;border:1.5px solid var(--ink);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;color:var(--ink);
+    font-family:var(--serif);font-weight:700;font-size:20px}
+  .eyebrow{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(34px,7vw,58px);line-height:1.05;margin:0 0 6px;letter-spacing:.5px}
+  .subtitle{font-family:var(--serif);font-size:clamp(17px,4vw,23px);color:var(--ink-soft);font-weight:500;margin-bottom:14px}
+  .lede{max-width:560px;margin:0 auto;color:var(--ink-soft);font-size:15px}
+  .count{margin-top:14px;font-size:13px;color:var(--muted);letter-spacing:.04em}
 
-.chapter {
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
+  .wrap{max-width:820px;margin:0 auto;padding:0 18px}
+  .searchbar{position:sticky;top:0;z-index:20;margin:0 -18px 4px;padding:14px 18px;
+    background:linear-gradient(var(--paper) 78%, transparent)}
+  .search{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:11px 14px}
+  .search svg{flex:none;color:var(--ink-soft)}
+  .search input{border:0;outline:0;background:transparent;width:100%;font-family:var(--sans);font-size:15px;color:var(--ink)}
+  .search input::placeholder{color:var(--muted)}
 
-audio {
-    width: 100%;
-    margin-top: 10px;
-}
+  section{margin:26px 0 8px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin:0 2px 12px;flex-wrap:wrap}
+  .sec-head h2{font-family:var(--serif);font-size:22px;font-weight:700;margin:0}
+  .sec-head .sub{font-size:12.5px;color:var(--muted);letter-spacing:.02em}
 
-.footer {
-    margin-top: 40px;
-    font-size: 0.9em;
-    color: #666;
-}
+  ul.list{list-style:none;margin:0;padding:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--card)}
+  li.track{display:flex;align-items:center;gap:14px;padding:12px 15px;cursor:pointer;
+    border-top:1px solid var(--line-2);transition:background .15s ease}
+  li.track:first-child{border-top:0}
+  li.track:hover{background:var(--paper-2)}
+  li.track:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .num{flex:none;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-size:12.5px;color:var(--ink-soft);background:var(--paper-2);font-variant-numeric:tabular-nums}
+  .t-main{flex:1;min-width:0}
+  .t-title{font-size:15px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .t-tr{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px;letter-spacing:.01em}
+  .play-ico{flex:none;color:var(--ink-soft);opacity:0;transition:opacity .15s}
+  li.track:hover .play-ico{opacity:1}
+  li.track.active{background:var(--paper-2)}
+  li.track.active .t-title{color:var(--accent);font-weight:600}
+  li.track.active .num{background:var(--accent);color:#fff}
+  li.track.active .play-ico{display:none}
+  .eq{flex:none;display:none;gap:3px;align-items:flex-end;height:16px;width:18px}
+  li.track.active .eq{display:flex}
+  .eq span{width:3px;background:var(--accent);height:30%;border-radius:2px}
+  li.track.active.playing .eq span{animation:bounce .9s ease-in-out infinite}
+  .eq span:nth-child(2){animation-delay:.15s}.eq span:nth-child(3){animation-delay:.3s}.eq span:nth-child(4){animation-delay:.45s}
+  @keyframes bounce{0%,100%{height:25%}50%{height:100%}}
+  .empty{padding:26px 8px;text-align:center;color:var(--muted);font-size:14px;display:none}
+
+  .player{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--ink);color:#F4EEE2;
+    border-top:1px solid rgba(255,255,255,.08);padding:0 16px env(safe-area-inset-bottom,0px);
+    transform:translateY(100%);transition:transform .28s ease}
+  .player.show{transform:translateY(0)}
+  .player-inner{max-width:820px;margin:0 auto;height:var(--bar-h);display:flex;align-items:center;gap:14px}
+  .pbtn{flex:none;border:0;background:transparent;color:#F4EEE2;cursor:pointer;display:flex;align-items:center;
+    justify-content:center;padding:6px;border-radius:50%}
+  .pbtn:hover{color:var(--accent-soft)}
+  .pbtn.main{background:var(--accent);color:#fff;width:46px;height:46px}
+  .pbtn.main:hover{background:var(--accent-soft)}
+  .pbtn:disabled{opacity:.35;cursor:default}
+  .pbtn:focus-visible{outline:2px solid var(--accent-soft);outline-offset:2px}
+  .meta{flex:1;min-width:0}
+  .meta .now{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .meta .now small{font-weight:400;color:rgba(244,238,226,.6);font-size:11.5px}
+  .meta .seekrow{display:flex;align-items:center;gap:9px;margin-top:5px}
+  .time{font-size:11px;color:rgba(244,238,226,.6);font-variant-numeric:tabular-nums;min-width:34px}
+  .time.end{text-align:right}
+  input[type=range].seek{-webkit-appearance:none;appearance:none;height:4px;width:100%;border-radius:4px;
+    background:rgba(244,238,226,.22);outline:none;cursor:pointer}
+  input[type=range].seek::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:13px;height:13px;
+    border-radius:50%;background:var(--accent-soft);border:2px solid var(--ink)}
+  input[type=range].seek::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--accent-soft);border:2px solid var(--ink)}
+  .err{display:none;font-size:11px;color:var(--accent-soft);margin-top:3px}
+  .err.show{display:block}
+
+  footer{max-width:820px;margin:40px auto 8px;padding:0 18px;color:var(--muted);font-size:12.5px;text-align:center}
+  footer code{background:var(--paper-2);padding:1px 6px;border-radius:5px}
+
+  @media (max-width:520px){.meta .now{font-size:13px}.pbtn.skip{display:none}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.eq span{height:60%!important}}
 </style>
 </head>
-
 <body>
 
 <header>
-    <h1>My Book Title</h1>
-    <p>Audio Companion</p>
+  <div class="langtoggle" role="group" aria-label="Language">
+    <button id="lang-gu" onclick="setLang('gu')">ગુજરાતી</button>
+    <button id="lang-en" onclick="setLang('en')">English</button>
+  </div>
+  <div class="mark">જ</div>
+  <div class="eyebrow" id="i-eyebrow"></div>
+  <h1>Just&nbsp;For&nbsp;You</h1>
+  <div class="subtitle" id="i-subtitle"></div>
+  <p class="lede" id="i-lede"></p>
+  <div class="count" id="count"></div>
 </header>
 
-<div class="chapter">
-    <h2>Chapter 1</h2>
-    <p>Introduction and supporting audio.</p>
-
-    <audio controls preload="metadata">
-        <source src="./aagman.mp3" type="audio/mpeg">
-        Your browser does not support audio playback.
-    </audio>
-
-    <p>
-        <a href="./aagman.mp3" download>
-            Download MP3
-        </a>
-    </p>
+<div class="wrap">
+  <div class="searchbar">
+    <label class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="search" autocomplete="off" aria-label="Search tracks">
+    </label>
+  </div>
+  <div id="sections"></div>
+  <div class="empty" id="empty"></div>
+  <footer id="i-footer"></footer>
 </div>
 
-<div class="footer">
-    © 2026 Author Name
+<div class="player" id="player" aria-live="polite">
+  <div class="player-inner">
+    <button class="pbtn skip" id="prev" aria-label="Previous"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14l-11-7z"/></svg></button>
+    <button class="pbtn main" id="toggle" aria-label="Play or pause">
+      <svg id="ic-play" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>
+      <svg id="ic-pause" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M7 4h4v16H7zM13 4h4v16h-4z"/></svg>
+    </button>
+    <button class="pbtn skip" id="next" aria-label="Next"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5l11 7-11 7z"/></svg></button>
+    <div class="meta">
+      <div class="now" id="now"></div>
+      <div class="seekrow">
+        <span class="time" id="cur">0:00</span>
+        <input class="seek" id="seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Seek">
+        <span class="time end" id="dur">0:00</span>
+      </div>
+      <div class="err" id="err"></div>
+    </div>
+  </div>
+  <audio id="audio" preload="none"></audio>
 </div>
 
+<script>
+  var AUDIO_DIR = "Audio/";   // change to "" if files sit next to index.html
+  var AUDIO_EXT = ".mp3";         // leave "" to use .ogg ; set to ".mp3" after converting
+  var DATA = {"sections": [{"key": "main", "gu": "મુખ્ય સંગ્રહ", "en": "Main Collection"}, {"key": "special", "gu": "વિશેષ", "en": "Special"}, {"key": "kartavya", "gu": "કર્તવ્ય", "en": "The Duties (Kartavya)"}, {"key": "mata", "gu": "માતા", "en": "Mother (Mata)"}, {"key": "bhakti", "gu": "પ્રસંગ અને ભક્તિ ગીત", "en": "Occasions & Devotional Songs"}, {"key": "prerna", "gu": "પ્રેરણા", "en": "Inspiration"}, {"key": "anya", "gu": "વૈયાવચ્ચ અને અન્ય", "en": "Vaiyavachcha & Others"}], "tracks": [{"sec": "main", "title": "ગુરુ અમૃતની ખાણ", "file": "1 ગુરુ અમૃતની ખાણ.ogg", "tr": "Guru Amrutanee Khaan", "i": 0}, {"sec": "main", "title": "કેવું ધન્ય જીવન જીવે છે મુનિરજ", "file": "2 કેવું ધન્ય જીવન જીવે છે મુનિરજ.ogg", "tr": "Kevun Dhany Jeevan Jeeve Chhe Muniraj", "i": 1}, {"sec": "main", "title": "વયથી બાળ પરિણતિથી પંડિત", "file": "3 વયથી બાળ પરિણતિથી પંડિત.ogg", "tr": "Vayathee Baal Parinatithee Pandit", "i": 2}, {"sec": "main", "title": "પાદવી લેવાતી નથી યોગ્ય ને અપાય છે", "file": "4 પાદવી લેવાતી નથી યોગ્ય ને અપાય છે.ogg", "tr": "Paadavee Levaatee Nathee Yogy Ne Apaay Chhe", "i": 3}, {"sec": "main", "title": "મહાવિદેહના સંત ભારતમાં", "file": "5 મહાવિદેહના સંત ભારતમાં.ogg", "tr": "Mahaavidehanaa Sant Bhaaratamaan", "i": 4}, {"sec": "main", "title": "બાળ મુનિના અબાલ પરાક્રમ", "file": "6 બાળ મુનિના અબાલ પરાક્રમ.ogg", "tr": "Baal Muninaa Abaal Paraakram", "i": 5}, {"sec": "main", "title": "સિદ્ધાંત દિવાકર", "file": "7 સિદ્ધાંત દિવાકર.ogg", "tr": "Siddhaant Divaakar", "i": 6}, {"sec": "main", "title": "શ્રુતજ્ઞાનના સર્ચ એન્જિને", "file": "8 શ્રુતજ્ઞાનના સર્ચ એન્જિને.ogg", "tr": "Shrutajnyaananaa Sarch Enjine", "i": 7}, {"sec": "main", "title": "શ્રુતજ્ઞાનના સર્ચ એન્જિને", "file": "9 શ્રુતજ્ઞાનના સર્ચ એન્જિને.ogg", "tr": "Shrutajnyaananaa Sarch Enjine", "i": 8}, {"sec": "main", "title": "કેવળજ્ઞાન અને કાળધર્મ", "file": "10 કેવળજ્ઞાન અને કાળધર્મ.ogg", "tr": "Kevalajnyaan Ane Kaaladharm", "i": 9}, {"sec": "main", "title": "યુગો સુધી ઝળહળશે ભુવનભાનુના અજવાળા", "file": "11 યુગો સુધી ઝળહળશે ભુવનભાનુના અજવાળા.ogg", "tr": "Yugo Sudhee Jhalahalashe Bhuvanabhaanunaa Ajavaalaa", "i": 10}, {"sec": "main", "title": "ઉપાધ્યાય તે આતમા જગબંધવ જગભ્રાતા રે", "file": "12 ઉપાધ્યાય તે આતમા જગબંધવ જગભ્રાતા રે.ogg", "tr": "Upaadhyaay Te Aatamaa Jagabandhav Jagabhraataa Re", "i": 11}, {"sec": "main", "title": "સિંહ પુરુષ ગુરુમાં - ૧૧મી પુણ્ય તિથિ", "file": "13 સિંહ પુરુષ ગુરુમાં - ૧૧મી પુણ્ય તિથિ.ogg", "tr": "Sinh Purush Gurumaan - 11mee Puny Tithi", "i": 12}, {"sec": "main", "title": "Heart Touching - તમે વાપરવા પધારો", "file": "14 Heart Touching - તમે વાપરવા પધારો.ogg", "tr": "Heart Touching - Tame Vaaparavaa Padhaaro", "i": 13}, {"sec": "main", "title": "Heart Touching - તું તો બહાદુર છે", "file": "15 Heart Touching - તું તો બહાદુર છે.ogg", "tr": "Heart Touching - Tun To Bahaadur Chhe", "i": 14}, {"sec": "main", "title": "Heart Touching - એક વાત કહું_", "file": "16 Heart Touching - એક વાત કહું_.ogg", "tr": "Heart Touching - Ek Vaat Kahun_", "i": 15}, {"sec": "main", "title": "વ્યસનીથી તપસ્વી", "file": "17 વ્યસનીથી તપસ્વી.ogg", "tr": "Vyasaneethee Tapasvee", "i": 16}, {"sec": "main", "title": "અહો! અહો! સાધુજી સમતાના દરિયા", "file": "18 અહો! અહો! સાધુજી સમતાના દરિયા.ogg", "tr": "Aho! Aho! Saadhujee Samataanaa Dariyaa", "i": 17}, {"sec": "main", "title": "મુમુક્ષુનો વૈરાગ્ય અને માતા - પિતાનો ત્યાગ", "file": "19 મુમુક્ષુનો વૈરાગ્ય અને માતા - પિતાનો ત્યાગ.ogg", "tr": "Mumukshuno Vairaagy Ane Maataa - Pitaano Tyaag", "i": 18}, {"sec": "main", "title": "જિનશાસનને પામેલી માતા ગુરુ હૃદયમાં વસેલા શિષ્ટ", "file": "20 જિનશાસનને પામેલી માતા ગુરુ હૃદયમાં વસેલા શિષ્ટ.ogg", "tr": "Jinashaasanane Paamelee Maataa Guru Hrudayamaan Vaselaa Shisht", "i": 19}, {"sec": "main", "title": "તપસ્વીને વંદન સદા વંદન સદા તપધર્મને", "file": "21 તપસ્વીને વંદન સદા વંદન સદા તપધર્મને.ogg", "tr": "Tapasveene Vandan Sadaa Vandan Sadaa Tapadharmane", "i": 20}, {"sec": "main", "title": "પ્રેમના નંદન તમને લાખ લાખ વંદન", "file": "22 પ્રેમના નંદન તમને લાખ લાખ વંદન.ogg", "tr": "Premanaa Nandan Tamane Laakh Laakh Vandan", "i": 21}, {"sec": "special", "title": "HOTEL કે HELL", "file": "J1 HOTEL કે HELL.ogg", "tr": "HOTEL Ke HELL", "i": 22}, {"sec": "kartavya", "title": "જીવન જીતવા માટે કર્તવ્ય, કર્તવ્ય માટે જીવન જીવવાનું", "file": "K1 જીવન જીતવા માટે કર્તવ્ય, કર્તવ્ય માટે જીવન જીવવાનું.ogg", "tr": "Jeevan Jeetavaa Maate Kartavy, Kartavy Maate Jeevan Jeevavaanun", "i": 23}, {"sec": "kartavya", "title": "કર્તવ્ય ૧ - પ્રભુની આઞયા", "file": "K2 કર્તવ્ય ૧ - પ્રભુની આઞયા.ogg", "tr": "Kartavy 1 - Prabhunee Aanyayaa", "i": 24}, {"sec": "kartavya", "title": "કર્તવ્ય ૨ - ૩ - મિથ્યાત્વ ત્યાગ - સમ્યક્ત્વ સ્વીકાર", "file": "K3 કર્તવ્ય ૨ - ૩ - મિથ્યાત્વ ત્યાગ - સમ્યક્ત્વ સ્વીકાર.ogg", "tr": "Kartavy 2 - 3 - Mithyaatv Tyaag - Samyaktv Sveekaar", "i": 25}, {"sec": "kartavya", "title": "કર્તવ્ય ૪ - સામાયિક", "file": "K4 કર્તવ્ય ૪ - સામાયિક.ogg", "tr": "Kartavy 4 - Saamaayik", "i": 26}, {"sec": "kartavya", "title": "કર્તવ્ય ૫ - ચતુર્વિશતિસ્તવ લોગ્ગસ", "file": "K5 કર્તવ્ય ૫ - ચતુર્વિશતિસ્તવ લોગ્ગસ.ogg", "tr": "Kartavy 5 - Chaturvishatistav Loggas", "i": 27}, {"sec": "kartavya", "title": "કર્તવ્ય ૬ - વંદન", "file": "K6 કર્તવ્ય ૬ - વંદન.ogg", "tr": "Kartavy 6 - Vandan", "i": 28}, {"sec": "kartavya", "title": "કર્તવ્ય ૭ - પ્રતિક્રમણ", "file": "K7 કર્તવ્ય ૭ - પ્રતિક્રમણ.ogg", "tr": "Kartavy 7 - Pratikraman", "i": 29}, {"sec": "kartavya", "title": "કર્તવ્ય ૮ - કાઉસગ્ગ (કાયાનો ત્યાગ)", "file": "K8 કર્તવ્ય ૮ - કાઉસગ્ગ (કાયાનો ત્યાગ).ogg", "tr": "Kartavy 8 - Kaausagg (kaayaano Tyaag)", "i": 30}, {"sec": "kartavya", "title": "કર્તવ્ય ૯ - પચ્ચકખાન", "file": "K9 કર્તવ્ય ૯ - પચ્ચકખાન.ogg", "tr": "Kartavy 9 - Pachchakakhaan", "i": 31}, {"sec": "kartavya", "title": "કર્તવ્ય ૧૦ - પૌશધ", "file": "K10 કર્તવ્ય ૧૦ - પૌશધ.ogg", "tr": "Kartavy 10 - Paushadh", "i": 32}, {"sec": "kartavya", "title": "કર્તવ્ય ૧૧ - દાન", "file": "K11 કર્તવ્ય ૧૧ - દાન.ogg", "tr": "Kartavy 11 - Daan", "i": 33}, {"sec": "kartavya", "title": "કર્તવ્ય ૧૨ - શીલ", "file": "K12 કર્તવ્ય ૧૨ - શીલ.ogg", "tr": "Kartavy 12 - Sheel", "i": 34}, {"sec": "kartavya", "title": "કર્તવ્ય ૧૩ - તપ", "file": "K13 કર્તવ્ય ૧૩ - તપ.ogg", "tr": "Kartavy 13 - Tap", "i": 35}, {"sec": "kartavya", "title": "કર્તવ્ય ૧૪ - ભાવ", "file": "K14 કર્તવ્ય ૧૪ - ભાવ.ogg", "tr": "Kartavy 14 - Bhaav", "i": 36}, {"sec": "kartavya", "title": "કર્તવ્ય ૧૫ - સ્વાધ્યાય", "file": "K15 કર્તવ્ય ૧૫ - સ્વાધ્યાય.ogg", "tr": "Kartavy 15 - Svaadhyaay", "i": 37}, {"sec": "kartavya", "title": "કર્તવ્ય ૧૬ - નમસ્કાર મહામંત્ર", "file": "K16 કર્તવ્ય ૧૬ - નમસ્કાર મહામંત્ર.ogg", "tr": "Kartavy 16 - Namaskaar Mahaamantr", "i": 38}, {"sec": "mata", "title": "જિનશાસનને પામેલી માતા", "file": "M1 જિનશાસનને પામેલી માતા.ogg", "tr": "Jinashaasanane Paamelee Maataa", "i": 39}, {"sec": "mata", "title": "મા અને જિનશાસનને પામેલી મા", "file": "M2 મા અને જિનશાસનને પામેલી મા.ogg", "tr": "Maa Ane Jinashaasanane Paamelee Maa", "i": 40}, {"sec": "mata", "title": "આપણે માતા-પિતા કે જિનશાસનને પામેલી માતા-પિતા", "file": "M3 આપણે માતા-પિતા કે જિનશાસનને પામેલી માતા-પિતા.ogg", "tr": "Aapane Maataa-pitaa Ke Jinashaasanane Paamelee Maataa-pitaa", "i": 41}, {"sec": "bhakti", "title": "Happy Birthday - હેપી બર્થડે", "file": "P1 Happy Birthday - હેપી બર્થડે.ogg", "tr": "Happy Birthday - Hepee Barthade", "i": 42}, {"sec": "bhakti", "title": "Jain Happy Birthday - જૈન હેપી બર્થડે", "file": "P2 Jain Happy Birthday - જૈન હેપી બર્થડે.ogg", "tr": "Jain Happy Birthday - Jain Hepee Barthade", "i": 43}, {"sec": "bhakti", "title": "નાવરાત્રિ - પ્રિયમ્", "file": "P3 નાવરાત્રિ - પ્રિયમ્.ogg", "tr": "Naavaraatri - Priyam", "i": 44}, {"sec": "bhakti", "title": "નાવરાત્રિ - પ્રિયમ્", "file": "P4 નાવરાત્રિ - પ્રિયમ્.ogg", "tr": "Naavaraatri - Priyam", "i": 45}, {"sec": "bhakti", "title": "તપાગચ્છાધિષ્ઠાયક યક્ષરાજશ્રી માણિભદ્ર", "file": "P5 તપાગચ્છાધિષ્ઠાયક યક્ષરાજશ્રી માણિભદ્ર.ogg", "tr": "Tapaagachchhaadhishthaayak Yaksharaajashree Maanibhadr", "i": 46}, {"sec": "bhakti", "title": "ફાગણ સુધ ૧૩ બાળમુનિ - મુમુક્ષુની સાચી અનુમોદના કરીએ", "file": "P6 ફાગણ સુધ ૧૩ બાળમુનિ - મુમુક્ષુની સાચી અનુમોદના કરીએ.ogg", "tr": "Phaagan Sudh 13 Baalamuni - Mumukshunee Saachee Anumodanaa Kareee", "i": 47}, {"sec": "bhakti", "title": "ચ્ચવન કલ્યાણક પ્રભુનું ચ્ચવન આપણું", "file": "P7 ચ્ચવન કલ્યાણક પ્રભુનું ચ્ચવન આપણું.ogg", "tr": "Chchavan Kalyaanak Prabhunun Chchavan Aapanun", "i": 48}, {"sec": "bhakti", "title": "એક જન્મ્યો રાજદુલારો", "file": "P8 એક જન્મ્યો રાજદુલારો.ogg", "tr": "Ek Janmyo Raajadulaaro", "i": 49}, {"sec": "bhakti", "title": "અથ શ્રી જન્મકલ્યાણક", "file": "P9 અથ શ્રી જન્મકલ્યાણક.ogg", "tr": "Ath Shree Janmakalyaanak", "i": 50}, {"sec": "bhakti", "title": "આવ્યો આવ્યો રે અવસર આરાધનાનો", "file": "P10 આવ્યો આવ્યો રે અવસર આરાધનાનો.ogg", "tr": "Aavyo Aavyo Re Avasar Aaraadhanaano", "i": 51}, {"sec": "bhakti", "title": "પાણી અને વાણી", "file": "P11 પાણી અને વાણી.ogg", "tr": "Paanee Ane Vaanee", "i": 52}, {"sec": "bhakti", "title": "તમને કઈ ઋતુ ગમે છે", "file": "P12 તમને કઈ ઋતુ ગમે છે.ogg", "tr": "Tamane Kee Rutu Game Chhe", "i": 53}, {"sec": "bhakti", "title": "ગુરુ પૂર્ણિમા", "file": "P13 ગુરુ પૂર્ણિમા.ogg", "tr": "Guru Poornimaa", "i": 54}, {"sec": "bhakti", "title": "સાચી ગુરુ પૂર્ણિમા", "file": "P14 સાચી ગુરુ પૂર્ણિમા.ogg", "tr": "Saachee Guru Poornimaa", "i": 55}, {"sec": "bhakti", "title": "પરિવર્તન કે પુનરાવર્તન", "file": "P15 પરિવર્તન કે પુનરાવર્તન.ogg", "tr": "Parivartan Ke Punaraavartan", "i": 56}, {"sec": "bhakti", "title": "એવા પ્રભુ અરિહંતને પંચાંગ ભાવે હું નમું", "file": "P16 એવા પ્રભુ અરિહંતને પંચાંગ ભાવે હું નમું.ogg", "tr": "Evaa Prabhu Arihantane Panchaang Bhaave Hun Namun", "i": 57}, {"sec": "bhakti", "title": "ચંદેસુ નિમ્મલયર સિદ્ધા સિદ્ધિં મમ દિસંતુ", "file": "P17 ચંદેસુ નિમ્મલયર સિદ્ધા સિદ્ધિં મમ દિસંતુ.ogg", "tr": "Chandesu Nimmalayar Siddhaa Siddhin Mam Disantu", "i": 58}, {"sec": "bhakti", "title": "તિત્થયરસમો સૂરી", "file": "P18 તિત્થયરસમો સૂરી.ogg", "tr": "Titthayarasamo Sooree", "i": 59}, {"sec": "bhakti", "title": "ઉપાધ્યાય તે આતમા જગબંધવ જગભ્રાતા રે", "file": "P19 ઉપાધ્યાય તે આતમા જગબંધવ જગભ્રાતા રે.ogg", "tr": "Upaadhyaay Te Aatamaa Jagabandhav Jagabhraataa Re", "i": 60}, {"sec": "bhakti", "title": "સાધુ બનીએ સિદ્ધિ પામીએ", "file": "P20 સાધુ બનીએ સિદ્ધિ પામીએ.ogg", "tr": "Saadhu Baneee Siddhi Paameee", "i": 61}, {"sec": "bhakti", "title": "સમકિત તે જે સાચુ ગમે", "file": "P21 સમકિત તે જે સાચુ ગમે.ogg", "tr": "Samakit Te Je Saachu Game", "i": 62}, {"sec": "bhakti", "title": "જ્ઞાનસ્ય ફલં વિરતિઃ પાપથી અટકાવે તે સાચું જ્ઞાન", "file": "P22 જ્ઞાનસ્ય ફલં વિરતિઃપાપથી અટકાવે તે સાચું જ્ઞાન.ogg", "tr": "Jnyaanasy Phalan Viratih Paapathee Atakaave Te Saachun Jnyaan", "i": 63}, {"sec": "bhakti", "title": "ચારિત્ર વિણ નહિં મુક્તિ રે", "file": "P23 ચારિત્ર વિણ નહિં મુક્તિ રે.ogg", "tr": "Chaaritr Vin Nahin Mukti Re", "i": 64}, {"sec": "bhakti", "title": "કર્મોને તપાવે તે તપ", "file": "P24 કર્મોને તપાવે તે તપ.ogg", "tr": "Karmone Tapaave Te Tap", "i": 65}, {"sec": "bhakti", "title": "બાહ્ય - અભ્ય અભ્યંતર તપ ઉજમાલ", "file": "P25 બાહ્ય - અભ્ય અભ્યંતર તપ ઉજમાલ.ogg", "tr": "Baahy - Abhy Abhyantar Tap Ujamaal", "i": 66}, {"sec": "bhakti", "title": "વંદન તપસ્વીને સદા વંદન સદા તપધર્મને", "file": "P26 વંદન તપસ્વીને સદા વંદન સદા તપધર્મને.ogg", "tr": "Vandan Tapasveene Sadaa Vandan Sadaa Tapadharmane", "i": 67}, {"sec": "bhakti", "title": "વસમી લાગે છે પ્રભુ તારી રે વિદાય", "file": "P27 વસમી લાગે છે પ્રભુ તારી રે વિદાય.ogg", "tr": "Vasamee Laage Chhe Prabhu Taaree Re Vidaay", "i": 68}, {"sec": "bhakti", "title": "નવું વરસ જાય સરસ", "file": "P28 નવું વરસ જાય સરસ.ogg", "tr": "Navun Varas Jaay Saras", "i": 69}, {"sec": "prerna", "title": "પાર કી આશા સદા નિરાશા", "file": "S1 પાર કી આશા સદા નિરાશા.ogg", "tr": "Paar Kee Aashaa Sadaa Niraashaa", "i": 70}, {"sec": "prerna", "title": "પ્રતિકૂળતા એક વરદાન", "file": "S2 પ્રતિકૂળતા એક વરદાન.ogg", "tr": "Pratikoolataa Ek Varadaan", "i": 71}, {"sec": "anya", "title": "વૈયાવચ્ચ ગુરુદેવની રે…", "file": "U1 વૈયાવચ્ચ ગુરુદેવની રે….ogg", "tr": "Vaiyaavachch Gurudevanee Re…", "i": 72}, {"sec": "anya", "title": "રીઝવવો એક સાંઇ", "file": "U2 રીઝવવો એક સાંઇ.ogg", "tr": "Reejhavavo Ek Saani", "i": 73}, {"sec": "anya", "title": "31st December - પ્રિયમ્", "file": "U5 31st December - પ્રિયમ્.ogg", "tr": "31st December - Priyam", "i": 74}, {"sec": "anya", "title": "પાર્શ્વનાથ મનવાંછિત પૂર ચિંતામણી મારી ચિંતા ચૂર", "file": "U6 પાર્શ્વનાથ મનવાંછિત પૂર ચિંતામણી મારી ચિંતા ચૂર.ogg", "tr": "Paarshvanaath Manavaanchhit Poor Chintaamanee Maaree Chintaa Choor", "i": 75}]};
+  var tracks = DATA.tracks, sectionsMeta = DATA.sections, current = -1;
+  var lang = "gu";
+
+  var I18N = {
+    gu:{ eyebrow:"જૈન ઑડિયો સંગ્રહ", subtitle:"જસ્ટ ફોર યુ — શ્રવણ સંગ્રહ",
+         lede:"પ્રવચન, કર્તવ્ય, ભક્તિ ગીત અને પ્રેરણાનો ઑડિયો સંગ્રહ. કોઈ પણ ટ્રેક પર ટૅપ કરી સાંભળો.",
+         count:"ટ્રેક", search:"શોધો…", nowDefault:"કોઈ ટ્રેક પસંદ કરો",
+         empty:"કોઈ ટ્રેક મળ્યો નહીં.",
+         err:"આ ફાઇલ ચાલી નહીં. .ogg કેટલાક બ્રાઉઝર અને iPhone પર ચાલતી નથી.",
+         footer:"ઑડિયો ફાઇલ્સ <code>audio/</code> ફોલ્ડરમાં રાખો · GitHub Pages પર હોસ્ટ" },
+    en:{ eyebrow:"Jain Audio Collection", subtitle:"Just For You — Listening Collection",
+         lede:"A collection of discourses, duties, devotional songs and inspiration. Tap any track to listen.",
+         count:"tracks", search:"Search titles…", nowDefault:"Pick a track to play",
+         empty:"No tracks found.",
+         err:"This file could not play. .ogg does not work in Safari or on most iPhones.",
+         footer:"Put audio files in the <code>audio/</code> folder · Hosted on GitHub Pages" }
+  };
+
+  var audio=document.getElementById('audio'), player=document.getElementById('player'),
+      nowEl=document.getElementById('now'), curEl=document.getElementById('cur'),
+      durEl=document.getElementById('dur'), seek=document.getElementById('seek'),
+      errEl=document.getElementById('err'), icPlay=document.getElementById('ic-play'),
+      icPause=document.getElementById('ic-pause'), prevBtn=document.getElementById('prev'),
+      nextBtn=document.getElementById('next');
+
+  var rowsByIndex={}, container=document.getElementById('sections');
+  sectionsMeta.forEach(function(sec){
+    var inSec=tracks.filter(function(t){return t.sec===sec.key;});
+    if(!inSec.length) return;
+    var s=document.createElement('section'); s.dataset.sec=sec.key;
+    var head=document.createElement('div'); head.className='sec-head';
+    head.innerHTML='<h2 class="sec-title"></h2><span class="sub sec-sub"></span>';
+    head.querySelector('.sec-title').dataset.gu=sec.gu; head.querySelector('.sec-title').dataset.en=sec.en;
+    head.querySelector('.sec-sub').dataset.gu=sec.en; head.querySelector('.sec-sub').dataset.en=sec.gu;
+    s.appendChild(head);
+    var ul=document.createElement('ul'); ul.className='list';
+    inSec.forEach(function(t,idx){
+      var li=document.createElement('li'); li.className='track'; li.tabIndex=0;
+      li.dataset.index=t.i; li.dataset.search=(t.title+' '+t.tr).toLowerCase();
+      li.innerHTML='<span class="num">'+(idx+1)+'</span>'+
+        '<span class="eq"><span></span><span></span><span></span><span></span></span>'+
+        '<span class="t-main"><div class="t-title">'+esc(t.title)+'</div><div class="t-tr">'+esc(t.tr)+'</div></span>'+
+        '<span class="play-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg></span>';
+      li.addEventListener('click',function(){playIndex(t.i);});
+      li.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();playIndex(t.i);}});
+      rowsByIndex[t.i]=li; ul.appendChild(li);
+    });
+    s.appendChild(ul); container.appendChild(s);
+  });
+
+  function setLang(l){
+    lang=l;
+    document.getElementById('html').lang = (l==='gu'?'gu':'en');
+    document.getElementById('lang-gu').classList.toggle('on',l==='gu');
+    document.getElementById('lang-en').classList.toggle('on',l==='en');
+    var s=I18N[l];
+    document.getElementById('i-eyebrow').textContent=s.eyebrow;
+    document.getElementById('i-subtitle').textContent=s.subtitle;
+    document.getElementById('i-lede').textContent=s.lede;
+    document.getElementById('count').textContent=tracks.length+' '+s.count;
+    document.getElementById('search').placeholder=s.search;
+    document.getElementById('empty').textContent=s.empty;
+    document.getElementById('i-footer').innerHTML=s.footer;
+    errEl.innerHTML=s.err;
+    document.querySelectorAll('.sec-title,.sec-sub').forEach(function(el){el.textContent=el.dataset[l];});
+    if(current<0) nowEl.textContent=s.nowDefault;
+    try{localStorage.setItem('jfy_lang',l);}catch(e){}
+  }
+
+  function srcFor(t){var name=AUDIO_EXT?t.file.replace(/\.ogg$/i,AUDIO_EXT):t.file;return AUDIO_DIR+encodeURIComponent(name);}
+  function playIndex(i){
+    if(i<0||i>=tracks.length) return;
+    var t=tracks[i];
+    if(i!==current){
+      current=i; audio.src=srcFor(t);
+      nowEl.innerHTML=esc(t.title)+' <small>'+esc(t.tr)+'</small>';
+      errEl.classList.remove('show'); seek.value=0; curEl.textContent='0:00'; durEl.textContent='0:00';
+      markActive(i); try{localStorage.setItem('jfy_last',i);}catch(e){}
+    }
+    var p=audio.play(); if(p&&p.catch)p.catch(function(){}); player.classList.add('show');
+  }
+  function markActive(i){
+    Object.keys(rowsByIndex).forEach(function(k){rowsByIndex[k].classList.remove('active','playing');});
+    if(rowsByIndex[i])rowsByIndex[i].classList.add('active');
+  }
+  document.getElementById('toggle').addEventListener('click',function(){
+    if(current<0){playIndex(0);return;} if(audio.paused)audio.play();else audio.pause();
+  });
+  prevBtn.addEventListener('click',function(){if(current>0)playIndex(current-1);});
+  nextBtn.addEventListener('click',function(){if(current<tracks.length-1)playIndex(current+1);});
+  audio.addEventListener('play',function(){icPlay.style.display='none';icPause.style.display='';
+    if(rowsByIndex[current])rowsByIndex[current].classList.add('playing');updateSkip();});
+  audio.addEventListener('pause',function(){icPlay.style.display='';icPause.style.display='none';
+    if(rowsByIndex[current])rowsByIndex[current].classList.remove('playing');});
+  audio.addEventListener('timeupdate',function(){if(audio.duration){seek.value=(audio.currentTime/audio.duration)*100;curEl.textContent=fmt(audio.currentTime);}});
+  audio.addEventListener('loadedmetadata',function(){durEl.textContent=fmt(audio.duration);updateSkip();});
+  audio.addEventListener('ended',function(){if(current<tracks.length-1)playIndex(current+1);});
+  audio.addEventListener('error',function(){errEl.classList.add('show');});
+  seek.addEventListener('input',function(){if(audio.duration)audio.currentTime=(seek.value/100)*audio.duration;});
+  function updateSkip(){prevBtn.disabled=current<=0;nextBtn.disabled=current>=tracks.length-1;}
+
+  var search=document.getElementById('search'), emptyEl=document.getElementById('empty');
+  search.addEventListener('input',function(){
+    var q=search.value.trim().toLowerCase(),any=false;
+    document.querySelectorAll('section[data-sec]').forEach(function(s){
+      var shown=0;
+      s.querySelectorAll('li.track').forEach(function(li){
+        var m=!q||li.dataset.search.indexOf(q)!==-1; li.style.display=m?'':'none'; if(m)shown++;
+      });
+      s.style.display=shown?'':'none'; if(shown)any=true;
+    });
+    emptyEl.style.display=any?'none':'block';
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.code==='Space'&&document.activeElement.tagName!=='INPUT'){e.preventDefault();
+      if(current<0)playIndex(0);else if(audio.paused)audio.play();else audio.pause();}
+  });
+
+  function fmt(s){if(!s||isNaN(s))return'0:00';s=Math.floor(s);var m=Math.floor(s/60),ss=s%60;return m+':'+(ss<10?'0':'')+ss;}
+  function esc(str){return String(str).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+  // init
+  (function(){
+    var l='gu'; try{var v=localStorage.getItem('jfy_lang'); if(v)l=v;}catch(e){}
+    setLang(l);
+    try{var last=localStorage.getItem('jfy_last'); if(last!==null){var i=parseInt(last,10);
+      if(i>=0&&i<tracks.length){current=i;audio.src=srcFor(tracks[i]);
+        nowEl.innerHTML=esc(tracks[i].title)+' <small>'+esc(tracks[i].tr)+'</small>';
+        markActive(i);updateSkip();player.classList.add('show');}}}catch(e){}
+  })();
+</script>
 </body>
 </html>
